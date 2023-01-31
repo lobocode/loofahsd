@@ -1,3 +1,7 @@
+# I thought about using C# or C++ to access WMI and Windows Update API. But, powershell does it more easily.
+# Defining the policy to run powershell scripts Unrestricted
+Set-ExecutionPolicy Unrestricted
+
 $currentCulture = [System.Threading.Thread]::CurrentThread.CurrentCulture
 $resourceManager = [System.Resources.ResourceManager] "DriverUpdatesResources", (Get-Module -Name MyModule).ModuleBase
 
