@@ -1,13 +1,18 @@
 # I thought about using C# or C++ to access WMI and Windows Update API. But, powershell does it more easily.
 # Defining the policy to run powershell scripts Unrestricted
-Set-ExecutionPolicy Unrestricted
+$policy = Get-ExecutionPolicy
 
-$currentCulture = [System.Threading.Thread]::CurrentThread.CurrentCulture
-$resourceManager = [System.Resources.ResourceManager] "DriverUpdatesResources", (Get-Module -Name MyModule).ModuleBase
-
-function GetResourceString($name) {
-  return $resourceManager.GetString($name, $currentCulture)
+if ($policy -ne "Unrestricted") {
+  Set-ExecutionPolicy Unrestricted
 }
+
+##$currentCulture = [System.Threading.Thread]::CurrentThread.CurrentCulture
+#$resourceManager = [System.Resources.ResourceManager] "i18n", (Get-Module -Name MyModule).ModuleBase
+
+#function GetResourceString($name) {
+#  return $resourceManager.GetString($name, $currentCulture)
+#}
+
 
 # Define a function to check for outdated drivers
 function Check-OutdatedDrivers {
@@ -24,6 +29,7 @@ function Check-OutdatedDrivers {
   foreach ($installedDriver in $installedDrivers) {
     # Get the latest version of the driver from Windows Update
     $latestVersion = (Get-WindowsDriver -Online | Where-Object {$_.DeviceName -eq $driverName -and $_.DriverVersion -lt $driverVersion})
+
 
     # Compare the installed version with the latest version
     if ($installedDriver.DriverVersion -lt $latestVersion) {
@@ -49,3 +55,6 @@ function Check-OutdatedDrivers {
 Write-Output (GetResourceString "checkOutdatedDriversFunction")
 # Call the function to check for outdated drivers
 Check-OutdatedDrivers
+
+## TODO
+# Write an efficient translation system
