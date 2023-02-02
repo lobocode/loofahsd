@@ -9,7 +9,7 @@ import com.sun.jna.platform.win32.WinNT;
 
 public class DriverBackup {
 
-    public static void main(String[] args) {
+    public voic driverBackup() {
 
         // Caminho da pasta de backup
         String backupPath = "C:\\Drivers Backup\\";
