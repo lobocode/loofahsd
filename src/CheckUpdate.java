@@ -1,10 +1,13 @@
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.sun.jna.platform.win32.SetupApi;
 import com.sun.jna.platform.win32.WinNT;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+
 
 public class CheckUpdate {
     private static List<Driver> drivers = new ArrayList<>();
@@ -32,21 +35,10 @@ public class CheckUpdate {
         }
 
         // Gravar informações dos drivers desatualizados em um arquivo .csv
-        try (FileWriter writer = new FileWriter("outdated_drivers.csv")) {
-            writer.append("Nome do driver");
-            writer.append(",");
-            writer.append("Versão atual");
-            writer.append(",");
-            writer.append("Última versão disponível");
-            writer.append("\n");
-            
+        try (FileWriter writer = new FileWriter("outdated_drivers.csv");
+            CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("Nome do driver", "Versão atual", "Última versão disponível"))) {
             for (Driver driver : outdatedDrivers) {
-                writer.append(driver.getName());
-                writer.append(",");
-                writer.append(driver.getCurrentVersion());
-                writer.append(",");
-                writer.append(driver.getLatestVersion());
-                writer.append("\n");
+                printer.printRecord(driver.getName(), driver.getCurrentVersion(), driver.getLatestVersion());
             }
         } catch (IOException e) {
             e.printStackTrace();
